@@ -9,6 +9,7 @@ WebsocketRails::EventMap.describe do
   # Here is an example of mapping namespaced events:
   namespace :student do
     subscribe :create, 'student_websockets#create'
+    subscribe :index, 'student_websockets#index'
    end
   # The above will handle an event triggered on the client like `product.new`.
 end

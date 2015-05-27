@@ -13,32 +13,13 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require websocket_rails/main
 //= require react
 //= require react_ujs
 //= require components
 //= require react_router.min
-//= require websocket_rails/main
 //= require_tree .
 
 
 dispatcher = new WebSocketRails('localhost:3000/websocket');
 
-$(function() {
-
-dispatcher.on_open = function(data) {
-  console.log('Connection has been established: ', data);
-  // You can trigger new server events inside this callback if you wish.
-}
-	
-var task = {
-  name: 'Start taking advantage of WebSockets',
-}
-
-
-dispatcher.trigger('student.create', task);
-
-dispatcher.bind('student.create_success', function(task) {
-  console.log('successfully created ' + task.name);
-});
-
-});
