@@ -1,10 +1,5 @@
 class StudentWebsocketsController < WebsocketRails::BaseController
-  def index
-  	students = Student.all
-  	if students.present?
-  		send_message :all_students, students, :namespace => student
-  	end
-  end
+ 
 
   def create
   	student = Student.new message

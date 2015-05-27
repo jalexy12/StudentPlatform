@@ -17,9 +17,9 @@
 //= require react
 //= require react_ujs
 //= require components
+//= require underscore
 //= require react_router.min
 //= require_tree .
 
 
-dispatcher = new WebSocketRails('localhost:3000/websocket');
 
