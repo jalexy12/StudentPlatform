@@ -10,8 +10,29 @@ var Events = {
 	}
 }
 
+var Student = React.createClass({
+	render: function(){
+			return(
+		        <div className="col s4">
+		          <div className="card blue-grey darken-1">
+		            <div className="card-content white-text">
+		              <span className="card-title">{this.props.student.name}</span>
+		              <p>I am a very simple card. I am good at containing small bits of information.
+		              I am convenient because I require little markup to use effectively.</p>
+		            </div>
+		            <div className="card-action">
+		              <a href="#">This is a link</a>
+		              <a href='#'>This is a link</a>
+		            </div>
+		          </div>
+		        </div>
+		      )
 
-var StudentComponent = React.createClass({
+	}
+})
+
+
+var StudentList = React.createClass({
 
 	getInitialState: function(){
 		return{
@@ -22,6 +43,7 @@ var StudentComponent = React.createClass({
 
 	createStudent: function(student){
 		this.state.events.studentCreate(student)
+		getStudents();
 	},
 
 	getStudents: function(){
@@ -38,11 +60,6 @@ var StudentComponent = React.createClass({
 		})
 	},
 
-	addStudent: function(students){
-		return this.setState({
-			students: students
-		})
-	},
 
 	componentDidMount: function(){
 		dispatcher = new WebSocketRails('localhost:3000/websocket');
@@ -58,31 +75,21 @@ var StudentComponent = React.createClass({
 	},
 
 	render: function(){
+		props = this.props
 		studentNodes = this.state.students.map(function(student){
-			return(
-		        <div className="col s4">
-		          <div className="card blue-grey darken-1">
-		            <div className="card-content white-text">
-		              <span className="card-title">{student.name}</span>
-		              <p>I am a very simple card. I am good at containing small bits of information.
-		              I am convenient because I require little markup to use effectively.</p>
-		            </div>
-		            <div className="card-action">
-		              <a href="#">This is a link</a>
-		              <a href='#'>This is a link</a>
-		            </div>
-		          </div>
-		        </div>
-		      )
-		})
+			  if (student.name.indexOf(this.props.filterText) === -1){
+				 return 
+			  }else{
+			  	 return <Student student={student} />
+			  }
+			})
 		return(
 			  <div>
-			   <NavSearch />
-			   <div className="container">
-				  <div className="row">
-					{studentNodes}
-				  </div>
-			   </div>
+			     <div className="container">
+				    <div className="row">
+					  {studentNodes}
+				   </div>
+			     </div>
 			   </div>
 			   )
 	}
@@ -90,19 +97,12 @@ var StudentComponent = React.createClass({
 
 var NavSearch = React.createClass({
 
-	getInitialState: function(){
-		return {userInput: ''}
-	},
 
 	handleChange: function(e){
-		this.setState({userInput: e.target.value}) 
+		this.props.onUserInput(
+	    	this.refs.searchInput.getDOMNode().value
+	    	)
 	},
-
-	clearAndFocusInput: function() {
-	    this.setState({userInput: ''}, function() {
-	      React.findDOMNode(this.refs.searchInput).focus();
-	    });
-	  },
 
 	render: function(){
 		return( 
@@ -110,12 +110,43 @@ var NavSearch = React.createClass({
 		    <div className="nav-wrapper">
 		      <form>
 		        <div className="input-field">
-		          <input id="search" type="search" ref="searchInput" value={this.state.userInput} onChange={this.handleChange} required />
+		          <input 
+		           id="search"
+		           type="search"
+		           ref="searchInput" 
+		           value={this.props.userInput} 
+		           onChange={this.handleChange}
+		           required />
 		          <label for="search"><i className="mdi-action-search"></i></label>
 		          <i className="mdi-navigation-close" onClick={this.clearAndFocusInput}></i>
 		        </div>
 		      </form>
 		    </div>
 		  </nav>)
+	}
+})
+
+var searchableStudentList = React.createClass({
+
+	getInitialState: function() {
+	     return {
+	         filterText: '',
+	     };
+	 },
+
+	 handleUserInput: function(filterText, inStockOnly) {
+	     this.setState({
+	         filterText: filterText,
+	         inStockOnly: inStockOnly
+	     });
+	 },
+
+	render: function(){
+		return(
+		<div>
+		  <NavSearch filterText={this.state.filterText} onUserInput={this.handleUserInput}  />
+		  <StudentList
+		    filterText={this.state.filterText} />
+		</div>)
 	}
 })
