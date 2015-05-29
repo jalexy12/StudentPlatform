@@ -4,4 +4,15 @@
 # Examples:
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+#   Mayor.create(name: 'Emanuel', csity: cities.first)
+
+100.times do 
+	Student.create(name: Faker::Name.name, email: Faker::Internet.email)
+end
+
+students = Student.all
+
+students.each do |student|
+	student.image = Faker::Avatar.image
+	student.save
+end

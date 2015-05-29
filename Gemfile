@@ -41,6 +41,8 @@ gem 'react-rails', '~> 1.0'
 gem 'react-router-rails', '~>0.11.6.1'
 
 gem 'underscore-rails'
+
+gem 'faker'
 # Use Unicorn as the app server
 # gem 'unicorn'
 
